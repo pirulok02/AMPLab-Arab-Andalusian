@@ -1,0 +1,6 @@
+numpy==1.16.0
+matplotlib==3.0.2
+music21==5.5.0
+jupyter==1.0.0
+jupyterlab==0.35.4
+tqdm==4.30.0
