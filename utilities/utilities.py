@@ -50,11 +50,14 @@ def show_music21_settings():
         
 ########################################################################
         
-def get_pitch_class_distribution(score):
+def get_pitch_class_percentage(score,direction = "all"):
+    #directions asc = ascendant, desc = descendant, all
     
     pitches = score.parts[0].pitches
     
     count_pitch_classes = defaultdict(int)
+    
+    pitches = select_pitches_direction(pitches, direction)
     
     for note in pitches:
         count_pitch_classes[int(note.ps%12)] += 1
@@ -93,4 +96,10 @@ def get_pitchclassdistribution_df(path):
             pitchclass_df = pd.concat([pitchclass_df,tmp_df],sort = True, ignore_index = True)
 
     return pitchclass_df
+
+########################################################################
+
+def select_pitches_direction(pitches,direction):
+    if direction == "all":
+        return pitches
 
