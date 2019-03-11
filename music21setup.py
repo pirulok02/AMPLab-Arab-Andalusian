@@ -14,7 +14,7 @@ us = environment.UserSettings()
 
 printsettings(us)
 
-configure.run()
+#configure.run()
 
 printsettings(us)
 #environment.set('musicxmlPath','/usr/bin/mscore')
