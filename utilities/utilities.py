@@ -179,4 +179,19 @@ def select_pitches_direction(pitches,direction,distance_th,plots_dir = PLOTS_DIR
 
         return selection
     
-    
+########################################################################
+
+def add_missing_columns(df):
+    missing_columns = list(set(np.arange(12)) - set([int(item) for item in list(df)]))
+    sLength = len(df[list(df)[0]])
+    for col in missing_columns:
+        df[col] = pd.Series(np.zeros(sLength).fill(np.nan), index=df.index)
+    return df   
+
+########################################################################
+
+def sort_df_columns_int(df):
+    df = df.transpose()
+    df.index = df.index.astype(int)
+    df = df.sort_index().transpose().replace(np.nan, 0)
+    return df
