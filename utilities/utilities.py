@@ -6,6 +6,7 @@ from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import shutil
 from music21 import *
 from utilities.constants import *
 
@@ -31,7 +32,8 @@ def organize_xml_files(path):
                 file_dest = os.path.join(path, file)
                 os.rename(file_path, file_dest)
                 if not subdir == path:
-                    os.rmdir(subdir)
+                    #os.rmdir(subdir)
+                    shutil.rmtree(subdir)
                     
 ########################################################################
 
@@ -52,7 +54,7 @@ def show_music21_settings():
         
 ########################################################################
         
-def get_all_pitchclassdistribution_df(path, direction = "all", distance_th = 2):
+def get_all_pitchclassdistribution_df(path, direction = "all", distance_th = 2, plots_dir = PLOTS_DIR):
     
     number_of_files = int(sum(1 for _ in os.listdir(path)))
 
@@ -67,7 +69,7 @@ def get_all_pitchclassdistribution_df(path, direction = "all", distance_th = 2):
             s = converter.parse(os.path.join(path,score))
             #print("s:",s)
             
-            classes,percentage = get_pitch_class_percentage(s, direction, distance_th)
+            classes,percentage = get_pitch_class_percentage(s, direction, distance_th, plots_dir)
             
             classes = [str(x) for x in classes]
             percentage = [[x] for x in percentage]
@@ -80,14 +82,14 @@ def get_all_pitchclassdistribution_df(path, direction = "all", distance_th = 2):
 
 ########################################################################
 
-def get_pitch_class_percentage(score, direction, distance_th):
+def get_pitch_class_percentage(score, direction, distance_th, plots_dir = PLOTS_DIR):
         #directions asc = ascendant, desc = descendant, all
         
         pitches = score.parts[0].pitches
         
         #print("pitches:", pitches)
         
-        midi_pitches = select_pitches_direction(pitches, direction, distance_th)
+        midi_pitches = select_pitches_direction(pitches, direction, distance_th, plots_dir)
         
         count_pitch_classes = defaultdict(int)
         
@@ -106,14 +108,14 @@ def get_pitch_class_percentage(score, direction, distance_th):
 
 ########################################################################
 
-def select_pitches_direction(pitches,direction,distance_th):
+def select_pitches_direction(pitches,direction,distance_th,plots_dir = PLOTS_DIR):
     
         if not direction in ["all","desc","asc"]:
             raise ValueError('Only all, desc, asc modes accepted')
         if distance_th<=0:
             raise ValueError('distance_th must be ≥1')
 
-        tmp_plots_dir = os.path.join(PLOTS_DIR,direction)
+        tmp_plots_dir = os.path.join(plots_dir,direction)
 
         if not os.path.exists(tmp_plots_dir):
             os.mkdir(tmp_plots_dir)
